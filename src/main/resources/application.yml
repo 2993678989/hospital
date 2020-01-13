@@ -1,0 +1,37 @@
+
+spring:
+  datasource:
+    name: hospital
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql:///hospital
+      username: root
+      password: admin
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+
+
+  main:
+    allow-bean-definition-overriding: true
+
+mybatis-plus:
+  type-aliases-package: com.zhiyou100.hospital.pojo
+  mapper-locations: classpath:mapper/*Mapper.xml
+logging:
+  level:
+    com.zhiyou100.hospital.mapper : debug

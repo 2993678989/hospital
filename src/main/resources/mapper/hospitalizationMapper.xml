@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhiyou100.hospital.mapper.HospitalizationMapper">
+    <resultMap id="hospitalization" type="Hospitalization">
+        <id column="id" property="id"/>
+        <result column="cases" property="cases"/>
+        <result column="caregivers" property="caregivers"/>
+        <result column="bed" property="bed"/>
+        <result column="deposit" property="deposit"/>
+        <result column="balance" property="balance"/>
+        <result column="condition" property="condition"/>
+        <result column="admission_time" property="admissionTime"/>
+        <collection property="registration" ofType="com.zhiyou100.hospital.pojo.Registration">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rID_type" property="IDType"/>
+            <result column="rID_card" property="IDCard"/>
+            <result column="rsocial_security" property="socialSecurity"/>
+            <result column="rphone" property="phone"/>
+            <result column="rself" property="self"/>
+            <result column="rsex" property="sex"/>
+            <result column="rage" property="age"/>
+            <result column="rprofession" property="profession"/>
+            <result column="rfirst_visit_again" property="firstVisitAgain"/>
+            <result column="rstate" property="state"/>
+            <collection property="doctor" ofType="com.zhiyou100.hospital.pojo.Doctor">
+                <id column="did" property="id"/>
+                <result column="dname" property="name"/>
+            </collection>
+            <collection property="department" ofType="com.zhiyou100.hospital.pojo.Department">
+                <id column="dtid" property="id"/>
+                <result column="dtname" property="name"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="queryAll" resultMap="hospitalization">
+        select h.id,h.cases,h.bed,h.deposit,h.balance,h.admission_time,r.name rname,r.phone rphone,r.state rstate,d.id did,
+            d.`name` dname,dt.id dtid,dt.`name` dtname
+        from hospitalization h
+        INNER JOIN registration r
+        on h.cases = r.id
+        INNER JOIN doctor d
+        on r.doctor_id = d.id
+        INNER JOIN department dt
+        on r.department_id = dt.id  ${ew.customSqlSegment}
+    </select>
+    <select id="queryById" resultMap="hospitalization">
+        select h.*,r.id rid,r.name rname,r.ID_type rID_type,r.ID_card rID_card,
+            r.social_security rsocial_security,r.phone rphone,r.sex rsex,r.age rage,r.profession rprofession,
+            r.first_visit_again rfirst_visit_again,r.self rself,r.state rstate,d.id did,
+            d.`name` dname,dt.id dtid,dt.`name` dtname
+        from hospitalization h
+        INNER JOIN registration r
+        on h.cases = r.id
+        INNER JOIN doctor d
+        on r.doctor_id = d.id
+        INNER JOIN department dt
+        on r.department_id = dt.id
+        where h.id = #{id}
+    </select>
+
+
+</mapper>

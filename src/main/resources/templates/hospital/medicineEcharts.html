@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>药品库存</title>
+    <script src="../Js/jquery.js" type="text/javascript"></script>
+    <script src="/Js/jquery.js" type="text/javascript"></script>
+    <script src="/Js/echarts.min.js"></script>
+    <script src="../Js/echarts.min.js"></script>
+</head>
+<body>
+<div id="echarts_post" style="width:600px;height:600px;"></div>
+<script>
+    $(function(){
+        $.ajax({
+            url:"medicineEcharts",
+            type:"post",
+            dataType:"json",
+            traditional: true,
+            success:function (medicineEcharts) {
+                var types = [];
+                for (var i=0; i<medicineEcharts.length;i++) {
+                    types.push(medicineEcharts[i].type);
+                }
+                var surplus = [];
+                for (var j=0; j<medicineEcharts.length;j++) {
+                    surplus.push(medicineEcharts[j].surplus);
+                }
+                var myChart = echarts.init(document.getElementById('echarts_post'));
+                var option = {
+                    xAxis: {
+                        type: 'category',
+                        data: types
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: surplus,
+                        type: 'bar'
+                    }]
+                };
+                myChart.setOption(option);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

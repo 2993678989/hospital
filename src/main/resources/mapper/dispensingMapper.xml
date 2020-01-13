@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhiyou100.hospital.mapper.DispensingMapper">
+    <resultMap id="dispensing" type="Dispensing">
+        <id column="id" property="id"/>
+        <result column="cases" property="cases"/>
+        <result column="name" property="name"/>
+        <result column="head" property="head"/>
+        <result column="medicine_id" property="medicineId"/>
+        <result column="dispensing_number" property="dispensingNumber"/>
+        <result column="already" property="already"/>
+        <result column="unissued" property="unissued"/>
+        <result column="give" property="give"/>
+        <result column="dispensing_time" property="dispensingTime"/>
+        <collection property="medicine" ofType="com.zhiyou100.hospital.pojo.Medicine">
+            <id column="mid" property="id"/>
+            <result column="mname" property="name"/>
+            <result column="mselling_price" property="sellingPrice"/>
+        </collection>
+    </resultMap>
+    <select id="queryAll" resultMap="dispensing">
+        select d.*,m.id mid,m.name mname from dispensing d INNER JOIN medicine m
+        on d.medicine_id = m.id ${ew.customSqlSegment}
+    </select>
+    <select id="queryPageByCases" resultMap="dispensing">
+        SELECT d.*,m.id mid,m.`name` mname from(
+        SELECT s.*
+        FROM (SELECT
+        r.*,
+        COUNT(*) AS rank
+        FROM dispensing t
+        LEFT JOIN dispensing r
+        ON t.cases = r.cases
+        AND t.medicine_id = r.medicine_id
+        AND t.dispensing_time &lt;= r.dispensing_time
+        GROUP BY t.id) s
+        WHERE s.rank = 1 and s.cases = #{cases}) d
+        LEFT join medicine m
+        on d.medicine_id = m.`id` ${ew.customSqlSegment}
+    </select>
+    <select id="queryByWrapper" resultMap="dispensing">
+        SELECT d.*,m.id mid,m.`name` mname,m.selling_price mselling_price from(
+        SELECT s.*
+        FROM (SELECT
+        r.*,
+        COUNT(*) AS rank
+        FROM dispensing t
+        LEFT JOIN dispensing r
+        ON t.cases = r.cases
+        AND t.medicine_id = r.medicine_id
+        AND t.dispensing_time &lt;= r.dispensing_time
+        GROUP BY t.id) s
+        WHERE s.rank = 1) d
+        LEFT join medicine m
+        on d.medicine_id = m.`id` ${ew.customSqlSegment}
+    </select>
+    <select id="queryByCases" resultMap="dispensing">
+        SELECT d.*,m.id mid,m.name mname,m.selling_price mselling_price FROM dispensing d LEFT JOIN medicine m on d.medicine_id = m.id ${ew.customSqlSegment}
+    </select>
+</mapper>

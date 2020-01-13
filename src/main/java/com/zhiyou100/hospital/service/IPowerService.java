@@ -1,0 +1,10 @@
+package com.zhiyou100.hospital.service;
+
+import com.zhiyou100.hospital.pojo.Power;
+
+/**
+ * @Author:li
+ * @Date:2019/12/1 20:32
+ */
+public interface IPowerService extends BaseService<Power> {
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>病房状态</title>
+    <script src="../Js/jquery.js" type="text/javascript"></script>
+    <script src="/Js/jquery.js" type="text/javascript"></script>
+    <script src="/Js/echarts.min.js"></script>
+    <script src="../Js/echarts.min.js"></script>
+</head>
+<body>
+<div id="echarts_post" style="width:600px;height:600px;"></div>
+<script>
+    $(function(){
+        $.ajax({
+            url:"medicineEcharts",
+            type:"post",
+            dataType:"json",
+            traditional: true,
+            success:function (medicineEcharts) {
+                var types = [];
+                for (var i=0; i<medicineEcharts.length;i++) {
+                    types.push(medicineEcharts[i].type);
+                }
+                var surplus = [];
+                for (var j=0; j<medicineEcharts.length;j++) {
+                    surplus.push(medicineEcharts[j].surplus);
+                }
+                var myChart = echarts.init(document.getElementById('echarts_post'));
+                var option = {
+                    title: {
+                        text: '病房状态',
+                        subtext: '纯属虚构',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: ['可使用', '已使用', '正在维修']
+                    },
+                    series: [
+                        {
+                            name: '来自数据库',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: [
+                                {value: 335, name: '可使用'},
+                                {value: 310, name: '已使用'},
+                                {value: 234, name: '正在维修'}
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>xx市第二人民医院信息管理系统</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link href="/assets/css/dpl-min.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/bui-min.css" rel="stylesheet" type="text/css" />
+    <link href="/assets/css/main-min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+
+    <div class="dl-title">
+        <!--<img src="/chinapost/Public/assets/img/top.png">-->
+    </div>
+
+    <div class="dl-log">欢迎您，<span class="dl-log-user" th:text="${session.myUser.account}"></span>
+
+	<a class="dl-log-quit" href="out" title="退出系统">[退出]</a>
+    </div>
+</div>
+<div class="content">
+    <div class="dl-main-nav">
+        <div class="dl-inform"><div class="dl-inform-title"><s class="dl-inform-icon dl-up"></s></div></div>
+        <ul class="nav-list ks-clear"  id="J_Nav">
+            <li class="nav-item dl-selected"><div class="nav-item-inner nav-home">医院管理系统</div></li>
+
+		</ul>
+    </div>
+    <ul class="dl-tab-conten" id="J_NavContent">
+    </ul>
+</div>
+
+<script src="/assets/js/jquery-1.6.js" type="text/javascript"></script>
+<script src="/assets/js/bui.js" type="text/javascript"></script>
+<script src="/assets/js/common/main-min.js" type="text/javascript"></script>
+<script src="/assets/js/config-min.js" type="text/javascript"></script>
+<script>
+    BUI.use('common/main',function(){
+        $(".tab-content-container").text("哈哈哈哈哈")
+
+
+        $.ajax({
+            url: "menu",
+            type: 'post',
+            dataType: 'json',
+            traditional: true,
+            success: function (status) {
+                var its = [];
+                for (var i=0; i<status.role.powers.length;i++) {
+                    its.push({id: i+2, text: status.role.powers[i].name, href: status.role.powers[i].url});
+                }
+                var config = [
+                    {
+                        id: '1', menu: [
+                            {
+                                text: '快速通道', items: its
+                            }
+                        ]
+                    }
+                ];
+                new PageUtil.MainPage({
+                    modulesConfig : config
+                });
+            },
+            error: function () {
+                alert("未登录,请重新登陆!");
+                window.location.href="/go";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

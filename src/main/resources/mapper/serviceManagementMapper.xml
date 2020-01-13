@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhiyou100.hospital.mapper.ServiceManagementMapper">
+    <resultMap id="serviceManagement" type="ServiceManagement">
+        <id column="id" property="id"/>
+        <result column="cases" property="cases"/>
+        <result column="name" property="name"/>
+        <result column="service_id" property="serviceId"/>
+        <result column="charge" property="charge"/>
+        <result column="charge_time" property="chargeTime"/>
+        <collection property="myService" ofType="com.zhiyou100.hospital.pojo.MyService">
+            <id column="mid" property="id"/>
+            <result column="mname" property="name"/>
+            <result column="mmoney" property="money"/>
+        </collection>
+    </resultMap>
+    <select id="queryAll" resultMap="serviceManagement">
+        select s.*,m.id mid,m.name mname,m.money mmnoey
+        from service_management s inner join service m
+        on s.service_id = m.id ${ew.customSqlSegment}
+    </select>
+
+    <select id="queryByCases" resultMap="serviceManagement">
+        select s.*,m.id mid,m.name mname,m.money mmnoey
+        from service_management s inner join service m
+        on s.service_id = m.id ${ew.customSqlSegment}
+    </select>
+
+</mapper>

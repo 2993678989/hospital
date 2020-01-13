@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhiyou100.hospital.mapper.RegistrationMapper">
+    <resultMap id="registration" type="Registration">
+        <id column="id" property="id"/>
+        <result column="cases" property="cases"/>
+        <result column="name" property="name"/>
+        <result column="ID_type" property="IDType"/>
+        <result column="ID_card" property="IDCard"/>
+        <result column="social_security" property="socialSecurity"/>
+        <result column="phone" property="phone"/>
+        <result column="self" property="self"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="profession" property="profession"/>
+        <result column="first_visit_again" property="firstVisitAgain"/>
+        <result column="doctor_id" property="doctorId"/>
+        <result column="state" property="state"/>
+        <result column="time" property="time"/>
+        <collection property="doctor" ofType="com.zhiyou100.hospital.pojo.Doctor">
+            <id column="did" property="id"/>
+            <result column="dname" property="name"/>
+        </collection>
+        <collection property="department" ofType="com.zhiyou100.hospital.pojo.Department">
+            <id column="dtid" property="id"/>
+            <result column="dtname" property="name"/>
+        </collection>
+    </resultMap>
+    <select id="queryAll" resultMap="registration">
+        select r.id,r.time,r.state,d.id did,d.name dname,dt.id dtid,dt.name dtname
+        from registration r
+        left join doctor d
+        on r.doctor_id = d.id
+        left join department dt
+        on r.department_id = dt.id  ${ew.customSqlSegment}
+
+    </select>
+    <select id="queryById" resultMap="registration">
+        select r.*,d.id did,d.name dname,dt.id dtid,dt.name dtname
+        from registration r
+        left join doctor d
+        on r.doctor_id = d.id
+        left join department dt
+        on r.department_id = dt.id
+        where r.id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhiyou100.hospital.mapper.DoctorMapper">
+    <resultMap id="doctor" type="Doctor">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="ID_type" property="IDType"/>
+        <result column="ID_card" property="IDCard"/>
+        <result column="phone" property="phone"/>
+        <result column="landline" property="landline"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="email" property="email"/>
+        <result column="department_id" property="departmentId"/>
+        <result column="education" property="education"/>
+        <result column="entry_time" property="entryTime"/>
+        <result column="remarks" property="remarks"/>
+        <collection property="department" ofType="com.zhiyou100.hospital.pojo.Department">
+            <id column="dtid" property="id"/>
+            <result column="dtname" property="name"/>
+        </collection>
+    </resultMap>
+    <select id="queryAll" resultMap="doctor">
+        select d.*,dt.id dtid,dt.name dtname
+        from doctor d
+        left join department dt
+        on d.department_id = dt.id  ${ew.customSqlSegment}
+
+    </select>
+    <select id="queryById" resultMap="doctor">
+        select d.*,dt.id dtid,dt.name dtname
+        from doctor d
+        left join department dt
+        on d.department_id = dt.id
+        where d.id = #{id}
+    </select>
+</mapper>
